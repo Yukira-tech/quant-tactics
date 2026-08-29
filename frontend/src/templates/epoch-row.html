@@ -1,0 +1,35 @@
+<!--
+@file epoch-row.html
+@brief 训练 epoch 历史表行模板
+
+层级：
+    frontend/src/templates/
+
+项目内绝对路径：
+    frontend/src/templates/epoch-row.html
+
+模块作用：
+    提供 epoch 历史表行的模板片段，供 page_training.js 克隆。
+
+使用者：
+    page_training.js 渲染训练历史表时使用。
+
+项目角色：
+    前端训练页行模板，保持 index.html 内联副本与权威副本逐字节一致。
+
+引入说明：
+    无脚本依赖，仅包含 HTML template 结构。
+
+维护记录：
+    2026-08-29 初始创建
+-->
+
+<template id="tpl-epoch-row">
+  <tr class="pop-in">
+    <td class="num" data-f="epoch">0</td>
+    <td class="num" data-f="train_loss">0.0000</td>
+    <td class="num" data-f="train_acc">0.00%</td>
+    <td class="num" data-f="val_loss">0.0000</td>
+    <td class="num" data-f="val_acc">0.00%</td>
+  </tr>
+</template>
