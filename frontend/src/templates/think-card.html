@@ -1,0 +1,41 @@
+<!--
+@file think-card.html
+@brief Agent 思考时间线卡模板
+
+层级：
+    frontend/src/templates/
+
+项目内绝对路径：
+    frontend/src/templates/think-card.html
+
+模块作用：
+    提供 Agent 思考卡模板，供 page_agent.js 克隆渲染。
+    包含状态药丸、事件时间线容器和最终决策盖章区。
+
+使用者：
+    page_agent.js 渲染思考卡时使用。
+
+项目角色：
+    前端 Agent 思考卡模板，与 index.html 内联副本逐字节一致。
+
+引入说明：
+    无脚本依赖，仅包含 HTML template 结构。
+
+维护记录：
+    2026-08-29 初始创建
+-->
+
+<template id="tpl-think-card">
+  <article class="think-card sticker pop-in">
+    <header class="think-head">
+      <span class="think-symbol num" data-f="symbol">------</span>
+      <span class="think-state" data-f="state">思考中</span>
+    </header>
+    <ol class="think-timeline" data-f="timeline"></ol>
+    <div class="think-final stamp-hold" data-f="final" hidden>
+      <span class="stamp-label" data-f="decision">持有</span>
+      <span class="stamp-conf num" data-f="confidence">0%</span>
+      <p class="stamp-reason" data-f="reason"></p>
+    </div>
+  </article>
+</template>

@@ -1,0 +1,38 @@
+<!--
+@file position-row.html
+@brief 持仓表行模板
+
+层级：
+    frontend/src/templates/
+
+项目内绝对路径：
+    frontend/src/templates/position-row.html
+
+模块作用：
+    提供持仓表行模板，供 page_monitor.js 克隆渲染。
+
+使用者：
+    page_monitor.js 渲染持仓表时使用。
+
+项目角色：
+    前端持仓行模板，与 index.html 内联副本逐字节一致。
+
+引入说明：
+    无脚本依赖，仅包含 HTML template 结构。
+
+维护记录：
+    2026-08-28 初始创建
+    2026-08-29 按 docs/COMMENT_STYLE.md 统一文件头
+-->
+
+<template id="tpl-position-row">
+  <tr class="pop-in">
+    <td class="num" data-f="symbol">------</td>
+    <td class="num" data-f="quantity">0</td>
+    <td class="num" data-f="avg_cost">0.00</td>
+    <td class="num" data-f="current_price">0.00</td>
+    <td class="num" data-f="floating_pnl">+0.00</td>
+    <td class="num dim" data-f="inventory_available">0</td>
+    <td class="num dim" data-f="inventory_frozen">0</td>
+  </tr>
+</template>

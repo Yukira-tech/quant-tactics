@@ -1,0 +1,34 @@
+<!--
+@file target-item.html
+@brief 目标组合条目模板
+
+层级：
+    frontend/src/templates/
+
+项目内绝对路径：
+    frontend/src/templates/target-item.html
+
+模块作用：
+    提供目标组合列表条目模板，供 page_monitor.js 克隆渲染。
+
+使用者：
+    page_monitor.js 渲染目标组合时使用。
+
+项目角色：
+    前端目标组合条目模板，与 index.html 内联副本逐字节一致。
+
+引入说明：
+    无脚本依赖，仅包含 HTML template 结构。
+
+维护记录：
+    2026-08-28 初始创建
+    2026-08-29 按 docs/COMMENT_STYLE.md 统一文件头
+-->
+
+<template id="tpl-target-item">
+  <li class="target-item pop-in">
+    <span class="num" data-f="symbol">------</span>
+    <span class="target-bar"><i data-f="bar" style="width: 0%"></i></span>
+    <span class="num" data-f="qty">0</span>
+  </li>
+</template>

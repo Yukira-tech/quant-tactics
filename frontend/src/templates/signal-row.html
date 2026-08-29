@@ -1,0 +1,38 @@
+<!--
+@file signal-row.html
+@brief 信号表行模板
+
+层级：
+    frontend/src/templates/
+
+项目内绝对路径：
+    frontend/src/templates/signal-row.html
+
+模块作用：
+    提供信号表行模板，供 page_monitor.js 克隆渲染。
+
+使用者：
+    page_monitor.js 渲染实时信号表时使用。
+
+项目角色：
+    前端信号行模板，与 index.html 内联副本逐字节一致。
+
+引入说明：
+    无脚本依赖，仅包含 HTML template 结构。
+
+维护记录：
+    2026-08-28 初始创建
+    2026-08-29 按 docs/COMMENT_STYLE.md 统一文件头
+-->
+
+<template id="tpl-signal-row">
+  <tr class="pop-in">
+    <td class="num" data-f="symbol">------</td>
+    <td><span class="badge badge-hold" data-f="signal">持有</span></td>
+    <td>
+      <span class="strength"><i data-f="strength" style="width: 0%"></i></span><span class="num dim" data-f="strength-text">0.00</span>
+    </td>
+    <td class="dim" data-f="source">—</td>
+    <td class="num dim" data-f="time">--:--:--</td>
+  </tr>
+</template>
