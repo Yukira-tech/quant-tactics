@@ -1,0 +1,1163 @@
+/**
+ * @file components.css
+ * @brief 二次元组件库：贴纸卡片、徽章、进度条、表格、思考卡等
+ *
+ * 层级：
+ *   frontend/src/style/
+ *
+ * 项目内绝对路径：
+ *   frontend/src/style/components.css
+ *
+ * 模块作用：
+ *   定义前端全部组件样式，包括导航、卡片、徽章、进度条、
+ *   表格、目标组合、思考卡、装饰层、加载层和响应式布局。
+ *
+ * 使用者：
+ *   frontend/public/index.html 在 base.css 之后引入本文件。
+ *
+ * 项目角色：
+ *   前端组件样式层，承载 FE2_SPEC 3.3/3.4 全部视觉语言。
+ *
+ * 引入说明：
+ *   依赖 tokens.css 中的设计变量。
+ *
+ * 维护记录：
+ *   2026-08-28 初始创建
+ *   2026-08-29 按 docs/COMMENT_STYLE.md 统一文件头
+ */
+
+/* ==========================================================================
+   components.css — v2 二次元组件库（FE2_SPEC 3.3 / 3.4）
+   组件语言：贴纸卡片（2.5px 暖棕描边 + 硬投影）、药丸徽章、弹簧动效。
+   色彩纪律：只允许 tokens.css 变量派生；涨/买=--up 珊瑚红，跌/卖=--down 青绿。
+   装饰符号（✦/✓/▍）一律内联 SVG 或文本字符，禁用 emoji。
+   ========================================================================== */
+
+/* ---- 通用小工具 -------------------------------------------------------- */
+.num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+}
+
+.dim {
+  color: var(--ink-soft);
+}
+
+/* 数据语义着色：仅用于数据本身。up=涨/买（珊瑚红），down=跌/卖（青绿） */
+.up {
+  color: var(--up);
+}
+
+.down {
+  color: var(--down);
+}
+
+/* ==========================================================================
+   贴纸卡片 .sticker / 面板 .panel（FE2_SPEC 3.3）
+   白底 + 2.5px 暖棕描边 + 硬投影 + 大圆角；
+   hover：translate(-2px,-2px) + 投影加深到 6px 6px 0，弹簧回弹 280ms。
+   ========================================================================== */
+.sticker,
+.panel {
+  background: var(--paper);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-pop);
+  transition: transform 280ms var(--spring), box-shadow 280ms var(--spring);
+}
+
+.sticker:hover,
+.panel:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 rgba(84, 69, 63, 0.14);
+}
+
+.panel {
+  padding: 18px 20px 20px;
+  min-width: 0; /* 防 grid 子项撑出横向滚动 */
+}
+
+/* 面板标题：ZCOOL 展示体 + 手绘四角星标记（内联 SVG，禁 emoji） */
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  color: var(--ink);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+  border-bottom: 2px dashed var(--sakura);
+}
+
+.panel-title::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  flex: none;
+  background: no-repeat center / contain
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1c1.2 6 4.8 9.8 11 11-6.2 1.2-9.8 5-11 11-1.2-6-4.8-9.8-11-11C7.2 10.8 10.8 7 12 1z' fill='%23ff9ebb'/%3E%3C/svg%3E");
+}
+
+/* 页面大标题 */
+.page-title {
+  font-size: 28px;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+
+/* 通用布局网格：统计卡 4 列 / 面板自适应列 */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+/* 页面骨架 .page-body：各页板块纵向流式排布，间距 16px */
+.page-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 训练页主体栅格（与 .page-body 同语言，独立成类便于空态整体折叠） */
+.train-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* hidden 兜底：作者 display 规则会盖住 UA 的 [hidden]{display:none}，需显式找回 */
+.train-body[hidden],
+.panel-grid[hidden] {
+  display: none;
+}
+
+/* ---- 统计贴纸卡 .stat-card ---------------------------------------------- */
+.stat-card {
+  padding: 16px 18px 18px;
+}
+
+.stat-label {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+
+.stat-num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.15;
+  color: var(--ink);
+  word-break: break-all;
+}
+
+/* ==========================================================================
+   药丸徽章 .badge（buy/sell/hold + 前缀手绘 ✦ 四角星 SVG）
+   ========================================================================== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+  font-family: var(--font-num);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  white-space: nowrap;
+  color: var(--ink-soft);
+  background: var(--paper);
+}
+
+/* 前缀手绘四角星（内联 SVG data-uri，颜色跟随徽章语义） */
+.badge::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  flex: none;
+  background: no-repeat center / contain
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1c1.2 6 4.8 9.8 11 11-6.2 1.2-9.8 5-11 11-1.2-6-4.8-9.8-11-11C7.2 10.8 10.8 7 12 1z' fill='%239c8b83'/%3E%3C/svg%3E");
+}
+
+.badge-buy {
+  color: var(--up);
+  background: var(--up-bg);
+}
+
+.badge-buy::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1c1.2 6 4.8 9.8 11 11-6.2 1.2-9.8 5-11 11-1.2-6-4.8-9.8-11-11C7.2 10.8 10.8 7 12 1z' fill='%23ff8a80'/%3E%3C/svg%3E");
+}
+
+.badge-sell {
+  color: var(--down);
+  background: var(--down-bg);
+}
+
+.badge-sell::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1c1.2 6 4.8 9.8 11 11-6.2 1.2-9.8 5-11 11-1.2-6-4.8-9.8-11-11C7.2 10.8 10.8 7 12 1z' fill='%236fbf73'/%3E%3C/svg%3E");
+}
+
+.badge-hold {
+  color: var(--ink-soft);
+  background: var(--cream);
+}
+
+/* ==========================================================================
+   左侧竖导航 #sidenav（200px 固定，药丸菜单项，激活深粉填充 + -2deg 旋转）
+   ========================================================================== */
+#sidenav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 14px;
+  background: var(--paper);
+  border-right: var(--border);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 6px 16px;
+}
+
+.nav-logo {
+  width: 42px;
+  height: 42px;
+  flex: none;
+}
+
+.nav-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.nav-title small {
+  display: block;
+  font-family: var(--font-num);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+
+.nav-item {
+  display: block;
+  padding: 10px 16px;
+  border: 2.5px solid transparent;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--ink);
+  white-space: nowrap;
+  transition: transform 280ms var(--spring), background 200ms ease,
+    color 200ms ease, border-color 200ms ease, box-shadow 280ms var(--spring);
+}
+
+.nav-item:hover {
+  background: var(--sakura);
+  transform: translateX(4px);
+}
+
+/* 激活项：深粉填充 + 白字 + 描边硬投影 + 轻微 -2deg 旋转 */
+.nav-item.active {
+  background: var(--sakura-deep);
+  color: #fff;
+  border-color: var(--ink);
+  box-shadow: var(--shadow-pop);
+  transform: rotate(-2deg);
+}
+
+#sidenav #conn-badge {
+  margin-top: auto;
+}
+
+/* ---- 页面容器 #page ----------------------------------------------------- */
+#page {
+  position: relative;
+  z-index: 1;
+  margin-left: 200px;
+  padding: 28px 32px 64px;
+  max-width: 1240px;
+  min-height: 100vh;
+}
+
+/* 页面切换动画（3.4）：旧页 fade+translateY(8px) 出 150ms；
+   新页 fade+translateY(-8px) 入 220ms 弹簧缓动。router.js 加/移 class。 */
+.page-leave {
+  animation: page-out 150ms ease-in both;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.page-enter {
+  animation: page-in 220ms var(--spring) both;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 卡片入场：staggered pop（scale .9→1，overshoot；JS 内联 animation-delay=index*70ms）。
+   用 backwards 而非 both：动画结束后交还 transform 控制权，不挡 .sticker 的 hover 位移。 */
+.pop-in {
+  animation: pop-in 320ms var(--spring) backwards;
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 数字变动闪烁（3.4）：scale 1→1.08→1 + 变色（涨红跌绿）350ms，
+   animationend 由 JS 移除 class。 */
+.flash-up {
+  animation: flash-up 350ms ease-out;
+}
+
+.flash-down {
+  animation: flash-down 350ms ease-out;
+}
+
+@keyframes flash-up {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.08);
+    color: var(--up);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes flash-down {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.08);
+    color: var(--down);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ==========================================================================
+   连接徽章 #conn-badge：LIVE 樱花粉脉冲点 / POLLING 蜜桃 / OFFLINE 灰
+   ========================================================================== */
+#conn-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: var(--border);
+  border-radius: 999px;
+  background: var(--paper);
+  font-family: var(--font-num);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+#conn-badge::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--ink-soft);
+}
+
+/* LIVE：樱花粉脉冲点 */
+#conn-badge[data-state="live"] {
+  color: var(--ink);
+}
+
+#conn-badge[data-state="live"]::before {
+  background: var(--sakura-deep);
+  animation: conn-pulse 1.4s ease-out infinite;
+}
+
+@keyframes conn-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 158, 187, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(255, 158, 187, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 158, 187, 0);
+  }
+}
+
+/* POLLING：蜜桃呼吸点 */
+#conn-badge[data-state="polling"] {
+  color: var(--ink);
+}
+
+#conn-badge[data-state="polling"]::before {
+  background: var(--peach);
+  animation: conn-breathe 1.4s ease-in-out infinite;
+}
+
+@keyframes conn-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* OFFLINE：灰点常暗；main 区域置灰 */
+#conn-badge[data-state="offline"] {
+  color: var(--ink-soft);
+  background: var(--cream);
+}
+
+/* offline 置灰：:has() 主路径 + .is-offline 兜底 class（SPA 代理可选加在 #page 上） */
+body:has(#conn-badge[data-state="offline"]) #page,
+#page.is-offline {
+  opacity: 0.45;
+  filter: saturate(0.3);
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+/* ==========================================================================
+   胶囊进度条 .progress（sakura-deep → lavender 横向过渡，2px 描边）
+   训练页主进度条与通用进度共用。
+   ========================================================================== */
+.progress {
+  height: 16px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.progress > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--sakura-deep), var(--lavender));
+  transition: width 300ms var(--spring);
+}
+
+/* 信号强度内嵌小胶囊条（信号表用） */
+.strength {
+  display: inline-block;
+  vertical-align: middle;
+  width: 64px;
+  height: 10px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+  overflow: hidden;
+  margin-right: 8px;
+}
+
+.strength > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--sakura-deep);
+  transition: width 300ms var(--spring);
+}
+
+/* ---- 训练进度行 .prog-row：标签 + 胶囊条 + 数值 三段式 -------------------- */
+.prog-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.prog-label {
+  flex: none;
+  width: 44px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.prog-row .progress {
+  flex: 1;
+}
+
+.prog-text {
+  flex: none;
+  min-width: 64px;
+  text-align: right;
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+/* 训练状态小药丸（idle 软蓝 / running 蜜桃呼吸 / done 鼠尾草绿），与 .tool-chip 同语言 */
+.train-state {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  font-family: var(--font-num);
+  font-size: 11px;
+  line-height: 1.5;
+  vertical-align: middle;
+  color: var(--ink);
+  background: var(--sky);
+  white-space: nowrap;
+}
+
+.train-state[data-state="running"] {
+  background: var(--peach);
+  animation: conn-breathe 1.2s ease-in-out infinite;
+}
+
+.train-state[data-state="done"] {
+  background: var(--sage);
+}
+
+/* 损失曲线图例：彩色圆点 + 小号数字体（颜色与 canvas 双曲线一致） */
+.chart-legend {
+  margin-left: 12px;
+  font-family: var(--font-num);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 6px 0 12px;
+}
+
+.legend-train {
+  background: var(--sakura-deep);
+}
+
+.legend-val {
+  background: var(--lavender);
+}
+
+/* ==========================================================================
+   贴纸表格 .tbl（信号表 / 持仓表 / epoch 历史表共用）
+   ========================================================================== */
+.tbl-wrap {
+  overflow-x: auto;
+}
+
+.tbl {
+  width: 100%;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.tbl thead th {
+  font-family: var(--font-num);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  text-align: left;
+  padding: 8px 12px;
+  background: var(--cream);
+  border-bottom: var(--border);
+  white-space: nowrap;
+}
+
+.tbl tbody td {
+  padding: 9px 12px;
+  border-bottom: 2px solid var(--cream);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.tbl tbody tr:hover td {
+  background: var(--sakura);
+}
+
+.tbl tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* 数字列右对齐（模板中 th.num / td.num） */
+.tbl th.num,
+.tbl td.num {
+  text-align: right;
+}
+
+/* ==========================================================================
+   目标组合 .target-item：symbol + 胶囊条形 + 千分位数量
+   ========================================================================== */
+.target-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 2px solid var(--cream);
+}
+
+.target-item:last-child {
+  border-bottom: none;
+}
+
+.target-item [data-f="symbol"] {
+  flex: none;
+  width: 76px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.target-item [data-f="qty"] {
+  flex: none;
+  min-width: 72px;
+  text-align: right;
+  color: var(--ink);
+}
+
+.target-bar {
+  flex: 1;
+  min-width: 0;
+  height: 12px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.target-bar > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--peach), var(--sakura-deep));
+  transition: width 300ms var(--spring);
+}
+
+/* ==========================================================================
+   最新信号摘要 .signal-brief（仪表盘）：药丸徽章 + 代码 + 强度 + 时间的贴纸行
+   行语言与 .target-item 一致（2px cream 行分隔，末行去线）。
+   ========================================================================== */
+.signal-brief .brief-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 2px solid var(--cream);
+}
+
+.signal-brief .brief-item:last-child {
+  border-bottom: none;
+}
+
+.signal-brief .brief-symbol {
+  flex: none;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.signal-brief .brief-strength {
+  flex: 1;
+  text-align: right;
+}
+
+.signal-brief .brief-time {
+  flex: none;
+}
+
+/* ==========================================================================
+   Agent 思考卡 .think-card：事件时间线 + 工具芯片 + 打字机 + 决策盖章
+   ========================================================================== */
+.think-card {
+  padding: 18px 20px 20px;
+}
+
+.think-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.think-symbol {
+  font-family: var(--font-num);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ink);
+}
+
+/* 思考状态小药丸：thinking=软蓝 / done=鼠尾草绿 */
+.think-state {
+  padding: 2px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--sky);
+  white-space: nowrap;
+}
+
+.think-state[data-state="done"] {
+  background: var(--sage);
+}
+
+.think-started {
+  margin-left: auto;
+  font-family: var(--font-num);
+  font-size: 12px;
+}
+
+/* 事件时间线：左侧樱花粉竖轨 + 事件圆点（按类型着色） */
+.think-timeline {
+  position: relative;
+  padding-left: 22px;
+}
+
+.think-timeline::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--sakura);
+}
+
+.think-event {
+  position: relative;
+  padding: 5px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink);
+  word-break: break-all;
+}
+
+.think-event::before {
+  content: "";
+  position: absolute;
+  left: -21px;
+  top: 11px;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.ev-status::before {
+  background: var(--sakura-deep);
+}
+
+.ev-tool::before {
+  background: var(--lavender);
+}
+
+.ev-tool_result::before {
+  background: var(--sage);
+}
+
+.ev-text::before {
+  background: var(--peach);
+}
+
+.ev-time {
+  font-family: var(--font-num);
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+/* 工具芯片（3.4/4.3 think.js）：名称 + 完成 ✓；running 蜜桃脉冲 / done 鼠尾草绿 */
+.tool-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  font-family: var(--font-num);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--sky);
+  white-space: nowrap;
+}
+
+.tool-chip[data-state="running"] {
+  background: var(--peach);
+  animation: conn-breathe 1.2s ease-in-out infinite;
+}
+
+.tool-chip[data-state="done"] {
+  background: var(--sage);
+}
+
+.tool-chip[data-state="done"]::after {
+  content: "✓";
+  font-weight: 700;
+  color: var(--down);
+}
+
+/* 工具结果文本：跟在工具芯片后的次要小字 */
+.tool-result-text {
+  margin-left: 8px;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+/* 打字机文本体：保留流式文本中的换行 */
+.ev-text-body {
+  white-space: pre-wrap;
+}
+
+/* 打字机光标：流式输出时给文本容器加 .typing，尾部 ▍ 闪烁（think.js 负责） */
+.typing::after {
+  content: "▍";
+  margin-left: 2px;
+  color: var(--sakura-deep);
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 最终决策盖章区（4.3：done 时去 hidden，盖章式 scale spring 弹出） */
+.think-final {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 12px 18px;
+  border: 3px solid var(--ink-soft);
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--ink-soft);
+  transform: rotate(-3deg);
+  animation: stamp-in 380ms var(--spring) both;
+}
+
+.think-final[hidden] {
+  display: none;
+}
+
+@keyframes stamp-in {
+  from {
+    opacity: 0;
+    transform: rotate(6deg) scale(1.5);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-3deg) scale(1);
+  }
+}
+
+.stamp-label {
+  display: inline-block;
+  margin-right: 10px;
+  font-family: var(--font-num);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.stamp-conf {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.stamp-reason {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--ink);
+}
+
+/* 盖章语义色：buy 珊瑚红 / sell 青绿 / hold 灰 */
+.stamp-buy {
+  border-color: var(--up);
+  color: var(--up);
+  background: var(--up-bg);
+}
+
+.stamp-sell {
+  border-color: var(--down);
+  color: var(--down);
+  background: var(--down-bg);
+}
+
+.stamp-hold {
+  border-color: var(--ink-soft);
+  color: var(--ink-soft);
+  background: var(--paper);
+}
+
+/* ==========================================================================
+   空态 .empty：虚线贴纸风（4.4 训练未开始 / LLM 未启用）
+   ========================================================================== */
+.empty {
+  border: 2.5px dashed var(--ink-soft);
+  border-radius: var(--radius);
+  background: var(--paper);
+  padding: 22px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.empty[hidden] {
+  display: none;
+}
+
+/* 权益/loss 曲线 canvas 统一尺寸 */
+.chart-canvas {
+  display: block;
+  width: 100%;
+  height: 260px;
+}
+
+/* ==========================================================================
+   装饰飘浮层 #decor：手绘 SVG 绝对定位，sine 上下漂浮 3~4s infinite，±8°
+   ========================================================================== */
+#decor {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.decor-item {
+  position: absolute;
+  opacity: 0.5;
+  animation: float-sine 3.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* 三件装饰的手绘定位与配色（描边颜色跟随 currentColor） */
+.decor-sakura {
+  top: 12%;
+  right: 6%;
+  color: var(--sakura-deep);
+}
+
+.decor-star {
+  top: 46%;
+  left: 26%;
+  color: var(--lavender);
+}
+
+.decor-cloud {
+  bottom: 10%;
+  right: 12%;
+  color: var(--sky);
+}
+
+#decor .decor-item:nth-child(2) {
+  animation-duration: 3s;
+  animation-delay: 0.6s;
+}
+
+#decor .decor-item:nth-child(3) {
+  animation-duration: 4.2s;
+  animation-delay: 1.1s;
+}
+
+@keyframes float-sine {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-8deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(8deg);
+  }
+}
+
+/* ==========================================================================
+   加载层 #loader：logo 弹簧弹跳 + 「加载中」圆点逐个跳动（3.4）
+   ========================================================================== */
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: var(--cream);
+}
+
+#loader .loader-logo {
+  width: 72px;
+  height: 72px;
+  animation: logo-bounce 900ms var(--spring) infinite alternate;
+  transform-origin: 50% 100%;
+}
+
+@keyframes logo-bounce {
+  from {
+    transform: translateY(2px) scale(1.08, 0.9);
+  }
+  to {
+    transform: translateY(-16px) scale(0.95, 1.06);
+  }
+}
+
+#loader .loader-text {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--ink);
+  letter-spacing: 0.1em;
+}
+
+#loader .loader-dots {
+  display: inline-flex;
+  gap: 6px;
+  margin-left: 8px;
+  vertical-align: baseline;
+}
+
+#loader .loader-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sakura-deep);
+  animation: dot-jump 1s ease-in-out infinite;
+}
+
+#loader .loader-dots i:nth-child(2) {
+  background: var(--peach);
+  animation-delay: 0.15s;
+}
+
+#loader .loader-dots i:nth-child(3) {
+  background: var(--lavender);
+  animation-delay: 0.3s;
+}
+
+@keyframes dot-jump {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-7px);
+  }
+}
+
+/* 加载完成淡出（app.js 加 .loader-hide，transitionend 后移除节点） */
+#loader.loader-hide {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   响应式：窄屏导航收到顶部、统计卡 2/1 列
+   ========================================================================== */
+@media (max-width: 1080px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  #sidenav {
+    position: static;
+    width: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 12px;
+    border-right: none;
+    border-bottom: var(--border);
+  }
+
+  .nav-brand {
+    padding: 0;
+  }
+
+  .nav-title small {
+    display: none;
+  }
+
+  .nav-item {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  #sidenav #conn-badge {
+    margin-top: 0;
+    margin-left: auto;
+  }
+
+  #page {
+    margin-left: 0;
+    padding: 18px 14px 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+}

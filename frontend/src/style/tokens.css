@@ -1,0 +1,62 @@
+/**
+ * @file tokens.css
+ * @brief 二次元设计令牌：色彩、字体、动效变量
+ *
+ * 层级：
+ *   frontend/src/style/
+ *
+ * 项目内绝对路径：
+ *   frontend/src/style/tokens.css
+ *
+ * 模块作用：
+ *   定义全局 CSS 变量，作为所有样式层的唯一设计来源。
+ *   包括奶油底、樱粉主强调、语义色、字体栈和弹簧缓动。
+ *
+ * 使用者：
+ *   base.css 和 components.css 引用本文件中的变量。
+ *
+ * 项目角色：
+ *   前端设计令牌层，加载顺序排第一。
+ *
+ * 引入说明：
+ *   无外部依赖，仅定义 :root 变量。
+ *
+ * 维护记录：
+ *   2026-08-28 初始创建
+ *   2026-08-29 按 docs/COMMENT_STYLE.md 统一文件头
+ */
+
+/* ==========================================================================
+   tokens.css — v2 二次元设计令牌（唯一来源：FE2_SPEC 3.1，变量名与值禁止改动）
+   奶油底 + 樱粉主强调；A股语义：涨/买=珊瑚红(--up)，跌/卖=青绿(--down)。
+   ========================================================================== */
+
+:root {
+  /* ---- 3.1 色彩（FE2_SPEC 固定值） ------------------------------------- */
+  --cream: #fdf6f0;        /* 主背景：奶油 */
+  --paper: #fffdfb;        /* 卡片底 */
+  --ink: #54453f;          /* 主文本：暖棕 */
+  --ink-soft: #9c8b83;     /* 次要文本 */
+  --sakura: #ffd3e0;       /* 樱花粉 */
+  --sakura-deep: #ff9ebb;  /* 深粉：主强调/激活态 */
+  --peach: #ffb583;        /* 蜜桃 */
+  --lavender: #baaaf7;     /* 薰衣草 */
+  --sky: #bbe9f2;          /* 软蓝 */
+  --sage: #c9e7b5;         /* 鼠尾草绿 */
+  /* 语义（A股）：涨红跌绿的粉彩表达 */
+  --up: #ff8a80;  --up-bg: #ffe5e2;      /* 涨/买：珊瑚红 */
+  --down: #6fbf73; --down-bg: #e8f5e0;   /* 跌/卖：青绿 */
+  --warn: #ffb583;
+  /* 质感 */
+  --radius: 18px;          /* 大圆角 */
+  --border: 2.5px solid var(--ink);   /* 贴纸描边 */
+  --shadow-pop: 4px 4px 0 rgba(84,69,63,.14);  /* 硬投影（贴纸感） */
+
+  /* ---- 3.2 字体栈（由规范派生；加载见 base.css 的 Google Fonts） -------- */
+  --font-display: "ZCOOL KuaiLe", "PingFang SC", "Microsoft YaHei", sans-serif; /* 中文标题/导航 */
+  --font-num: "Baloo 2", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; /* 数字/英文 */
+  --font-body: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;     /* 中文正文 */
+
+  /* ---- 3.3 动效缓动（规范派生） ---------------------------------------- */
+  --spring: cubic-bezier(.34, 1.56, .64, 1);  /* 弹簧回弹（hover/入场/盖章） */
+}
