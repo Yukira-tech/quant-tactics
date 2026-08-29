@@ -1,0 +1,13 @@
+# YukiPilot 决策增强层依赖清单
+# 必需：PyTorch（手写 Transformer）与 numpy（特征矩阵计算）
+torch>=2.0
+numpy>=1.24
+
+# 可选：LangChain 大模型 Agent（tool-calling 决策复核）。
+# 安装以下可选依赖、设置 OPENAI_API_KEY 并将 AgentConfig.use_llm 置 True 后，
+# 决策复核由 LLM Agent 执行（本地工具调用循环 + 代码级护栏）；
+# 不安装时自动降级为规则模板，行为与未启用 LLM 完全一致：
+#   pip install langchain langchain-core langchain-openai
+# langchain>=0.2
+# langchain-core>=0.2
+# langchain-openai>=0.1
