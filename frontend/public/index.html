@@ -1,0 +1,268 @@
+<!--
+@file index.html
+@brief 前端单页入口与页面模板
+
+层级：
+    frontend/public/
+
+项目内绝对路径：
+    frontend/public/index.html
+
+模块作用：
+    提供 SPA 外壳、四页 hash 路由模板、行模板与装饰层。
+    页面切换由 router.js 接管，各页数据位用 data-f 标注。
+
+使用者：
+    浏览器直接打开或由 Go 静态托管访问。
+
+项目角色：
+    前端监控面板唯一入口，所有页面模板与脚本加载在此汇聚。
+
+引入说明：
+    依赖 src/style/ 下 tokens、base、components 三份样式。
+    依赖 src/api/ 与 src/dom/ 下脚本按固定顺序加载。
+
+维护记录：
+    2026-08-28 初始创建
+    2026-08-29 二次元风格改版，增加训练与 Agent 页面
+-->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strategy Engine · 策略引擎</title>
+  <link rel="icon" type="image/svg+xml" href="../src/image/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=ZCOOL+KuaiLe&display=swap">
+  <link rel="stylesheet" href="../src/style/tokens.css">
+  <link rel="stylesheet" href="../src/style/base.css">
+  <link rel="stylesheet" href="../src/style/components.css">
+</head>
+<body>
+  <div id="loader">
+    <span class="loader-logo" aria-hidden="true">
+      <svg viewBox="0 0 64 64" width="72" height="72">
+        <path d="M32 4 Q36 24 60 32 Q36 40 32 60 Q28 40 4 32 Q28 24 32 4 Z"
+              fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="32" cy="32" r="5" fill="currentColor"/>
+      </svg>
+    </span>
+    <div class="loader-text">加载中<span class="loader-dots"><i>.</i><i>.</i><i>.</i></span></div>
+  </div>
+
+  <nav id="sidenav">
+    <a class="nav-brand" href="#/dashboard" aria-label="返回仪表盘">
+      <svg class="nav-logo" viewBox="0 0 64 64" width="40" height="40" aria-hidden="true">
+        <path d="M32 4 Q36 24 60 32 Q36 40 32 60 Q28 40 4 32 Q28 24 32 4 Z"
+              fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="32" cy="32" r="5" fill="currentColor"/>
+      </svg>
+      <span class="nav-title">策略引擎</span>
+    </a>
+    <a class="nav-item" href="#/dashboard" data-page="dashboard">仪表盘</a>
+    <a class="nav-item" href="#/monitor" data-page="monitor">行情监控</a>
+    <a class="nav-item" href="#/training" data-page="training">训练中心</a>
+    <a class="nav-item" href="#/agent" data-page="agent">Agent 思考</a>
+    <div id="conn-badge" data-state="offline">OFFLINE</div>
+  </nav>
+
+  <main id="page"></main>
+
+  <template data-page="dashboard">
+    <div class="page-body">
+      <section class="stat-grid">
+        <article class="stat-card sticker pop-in"><h3>总权益</h3><div class="stat-num" data-f="equity">--</div></article>
+        <article class="stat-card sticker pop-in"><h3>总盈亏</h3><div class="stat-num" data-f="pnl">--</div></article>
+        <article class="stat-card sticker pop-in"><h3>最大回撤</h3><div class="stat-num" data-f="drawdown">--</div></article>
+        <article class="stat-card sticker pop-in"><h3>持仓数</h3><div class="stat-num" data-f="positions-count">--</div></article>
+      </section>
+
+      <section class="panel pop-in">
+        <h2>权益曲线</h2>
+        <canvas class="chart-canvas" data-f="equity-chart"></canvas>
+      </section>
+
+      <section class="panel pop-in">
+        <h2>最新信号</h2>
+        <ul class="signal-brief" data-f="signal-brief"></ul>
+        <div class="empty" data-f="brief-empty">暂无信号 · 等待策略引擎写入</div>
+      </section>
+    </div>
+  </template>
+
+  <template data-page="monitor">
+    <div class="page-body">
+      <section class="panel pop-in">
+        <h2>实时信号</h2>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr><th>代码</th><th>信号</th><th>强度</th><th>来源</th><th>时间</th></tr>
+            </thead>
+            <tbody data-f="signals-body"></tbody>
+          </table>
+        </div>
+        <div class="empty" data-f="signals-empty">等待 C++ 信号写入 runtime_files/signals/ …</div>
+      </section>
+
+      <section class="panel pop-in">
+        <h2>持仓</h2>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr><th>代码</th><th>数量</th><th>成本</th><th>现价</th><th>浮动盈亏</th><th>可用</th><th>冻结</th></tr>
+            </thead>
+            <tbody data-f="positions-body"></tbody>
+          </table>
+        </div>
+        <div class="empty" data-f="positions-empty">暂无持仓</div>
+      </section>
+
+      <section class="panel pop-in">
+        <h2>目标组合</h2>
+        <ul data-f="target-list"></ul>
+        <div class="empty" data-f="target-empty">无目标持仓</div>
+      </section>
+    </div>
+  </template>
+
+  <template data-page="training">
+    <div class="page-body">
+      <div class="empty" data-f="train-empty">尚未开始训练</div>
+      <div class="train-body" data-f="train-body">
+        <section class="panel pop-in">
+          <h2>训练进度 <span class="train-state" data-f="train-state">IDLE</span></h2>
+          <div class="prog-row">
+            <span class="prog-label">Epoch</span>
+            <div class="progress"><i data-f="epoch-bar" style="width: 0%"></i></div>
+            <span class="prog-text" data-f="epoch-text">0 / 0</span>
+          </div>
+          <div class="prog-row">
+            <span class="prog-label">Batch</span>
+            <div class="progress"><i data-f="batch-bar" style="width: 0%"></i></div>
+            <span class="prog-text" data-f="batch-text">0 / 0</span>
+          </div>
+        </section>
+
+        <section class="stat-grid">
+          <article class="stat-card sticker pop-in"><h3>当前损失</h3><div class="stat-num" data-f="loss">--</div></article>
+          <article class="stat-card sticker pop-in"><h3>验证损失</h3><div class="stat-num" data-f="val-loss">--</div></article>
+          <article class="stat-card sticker pop-in"><h3>速度</h3><div class="stat-num" data-f="speed">--</div></article>
+          <article class="stat-card sticker pop-in"><h3>预计剩余</h3><div class="stat-num" data-f="eta">--</div></article>
+        </section>
+
+        <section class="panel pop-in">
+          <h2>损失曲线 <span class="chart-legend"><i class="legend-dot legend-train"></i>train <i class="legend-dot legend-val"></i>val</span></h2>
+          <canvas class="chart-canvas" data-f="loss-chart"></canvas>
+        </section>
+
+        <section class="panel pop-in">
+          <h2>Epoch 历史</h2>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead>
+                <tr><th>Epoch</th><th>训练损失</th><th>训练准确率</th><th>验证损失</th><th>验证准确率</th></tr>
+              </thead>
+              <tbody data-f="epoch-body"></tbody>
+            </table>
+          </div>
+          <div class="empty" data-f="epoch-empty">暂无历史记录</div>
+        </section>
+      </div>
+    </div>
+  </template>
+
+  <template data-page="agent">
+    <div class="page-body">
+      <div class="empty" data-f="agent-empty">LLM 未启用</div>
+      <div class="panel-grid" data-f="think-grid"></div>
+    </div>
+  </template>
+
+  <template id="tpl-signal-row">
+    <tr class="pop-in">
+      <td class="num" data-f="symbol">------</td>
+      <td><span class="badge badge-hold" data-f="signal">持有</span></td>
+      <td>
+        <span class="strength"><i data-f="strength" style="width: 0%"></i></span><span class="num dim" data-f="strength-text">0.00</span>
+      </td>
+      <td class="dim" data-f="source">—</td>
+      <td class="num dim" data-f="time">--:--:--</td>
+    </tr>
+  </template>
+
+  <template id="tpl-position-row">
+    <tr class="pop-in">
+      <td class="num" data-f="symbol">------</td>
+      <td class="num" data-f="quantity">0</td>
+      <td class="num" data-f="avg_cost">0.00</td>
+      <td class="num" data-f="current_price">0.00</td>
+      <td class="num" data-f="floating_pnl">+0.00</td>
+      <td class="num dim" data-f="inventory_available">0</td>
+      <td class="num dim" data-f="inventory_frozen">0</td>
+    </tr>
+  </template>
+
+  <template id="tpl-target-item">
+    <li class="target-item pop-in">
+      <span class="num" data-f="symbol">------</span>
+      <span class="target-bar"><i data-f="bar" style="width: 0%"></i></span>
+      <span class="num" data-f="qty">0</span>
+    </li>
+  </template>
+
+  <template id="tpl-epoch-row">
+    <tr class="pop-in">
+      <td class="num" data-f="epoch">0</td>
+      <td class="num" data-f="train_loss">0.0000</td>
+      <td class="num" data-f="train_acc">0.00%</td>
+      <td class="num" data-f="val_loss">0.0000</td>
+      <td class="num" data-f="val_acc">0.00%</td>
+    </tr>
+  </template>
+
+  <template id="tpl-think-card">
+    <article class="think-card sticker pop-in">
+      <header class="think-head">
+        <span class="think-symbol num" data-f="symbol">------</span>
+        <span class="think-state" data-f="state">思考中</span>
+      </header>
+      <ol class="think-timeline" data-f="timeline"></ol>
+      <div class="think-final stamp-hold" data-f="final" hidden>
+        <span class="stamp-label" data-f="decision">持有</span>
+        <span class="stamp-conf num" data-f="confidence">0%</span>
+        <p class="stamp-reason" data-f="reason"></p>
+      </div>
+    </article>
+  </template>
+
+  <div id="decor" aria-hidden="true">
+    <svg class="decor-item decor-sakura" viewBox="0 0 40 40" width="44" height="44">
+      <path d="M20 3 C28 10 34 16 34 24 A14 14 0 0 1 6 24 C6 16 12 10 20 3 Z"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    </svg>
+    <svg class="decor-item decor-star" viewBox="0 0 40 40" width="30" height="30">
+      <path d="M20 3 Q22 16 37 20 Q22 24 20 37 Q18 24 3 20 Q18 16 20 3 Z"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    </svg>
+    <svg class="decor-item decor-cloud" viewBox="0 0 64 40" width="72" height="46">
+      <path d="M16 34 A10 10 0 0 1 14 15 A13 13 0 0 1 39 12 A11 11 0 0 1 52 34 Z"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <script src="../src/api/bus.js"></script>
+  <script src="../src/api/endpoints.js"></script>
+  <script src="../src/api/http.js"></script>
+  <script src="../src/api/ws.js"></script>
+  <script src="../src/router.js"></script>
+  <script src="../src/dom/page_dashboard.js"></script>
+  <script src="../src/dom/page_monitor.js"></script>
+  <script src="../src/dom/page_training.js"></script>
+  <script src="../src/dom/page_agent.js"></script>
+  <script src="../src/app.js"></script>
+</body>
+</html>
