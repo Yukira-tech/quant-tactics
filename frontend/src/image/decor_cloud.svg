@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 24" width="32" height="24" role="img" aria-label="装饰云朵">
+  <!-- 手绘云朵：软蓝低透明度，飘浮装饰用 -->
+  <g fill="#bbe9f2" opacity="0.6">
+    <circle cx="10.5" cy="15" r="5"/>
+    <circle cx="17" cy="10.5" r="6"/>
+    <circle cx="23.5" cy="15" r="4.5"/>
+    <rect x="7" y="14" width="19" height="6" rx="3"/>
+  </g>
+</svg>

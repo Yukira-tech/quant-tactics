@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="StrategyEngine">
+  <!-- favicon：新 logo 简化版（星星精灵 + K 线蜡烛天线），小尺寸下省去腮红/装饰 -->
+  <path d="M24 12 L27.8 21.7 L38.3 22.4 L30.2 29 L32.8 39.1 L24 33.5 L15.2 39.1 L17.8 29 L9.7 22.4 L20.2 21.7 Z"
+        fill="#ffd3e0" stroke="#54453f" stroke-width="3" stroke-linejoin="round"/>
+  <line x1="24" y1="3.2" x2="24" y2="7.6" stroke="#54453f" stroke-width="2.4" stroke-linecap="round"/>
+  <rect x="20.6" y="7.2" width="6.8" height="5.6" rx="1.8"
+        fill="#ffb583" stroke="#54453f" stroke-width="2.4"/>
+  <circle cx="19" cy="26" r="2" fill="#54453f"/>
+  <circle cx="29" cy="26" r="2" fill="#54453f"/>
+  <path d="M22.2 30 Q24 31.6 25.8 30" fill="none" stroke="#54453f" stroke-width="1.8" stroke-linecap="round"/>
+</svg>

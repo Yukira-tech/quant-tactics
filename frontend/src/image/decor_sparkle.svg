@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" role="img" aria-label="装饰四角星">
+  <!-- 手绘四角星：深粉低透明度，飘浮装饰用（components.css #decor/.decor-item 驱动 sine 动画） -->
+  <path d="M12 1.5 C13.2 7 16.3 10.3 22.5 12 C16.3 13.7 13.2 17 12 22.5 C10.8 17 7.7 13.7 1.5 12 C7.7 10.3 10.8 7 12 1.5 Z"
+        fill="#ff9ebb" opacity="0.45"/>
+</svg>
