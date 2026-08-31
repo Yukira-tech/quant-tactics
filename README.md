@@ -1,4 +1,4 @@
-# StrategyEngine
+# StrategyEngine（本地文件夹为这个名字）
 
 ## 中文版
 
